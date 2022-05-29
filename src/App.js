@@ -7,6 +7,8 @@ import SignUp from './components/signup.component'
 import Profile from './components/Profile/Profile';
 import Missions from './components/Missions/Missions';
 import Route1 from './components/Routes/1';
+import Box from '@mui/material/Box';
+
 
 
 function App() {
@@ -34,8 +36,10 @@ function App() {
             </div>
           </div>
         </nav>
+        
         <div className="auth-wrapper">
           <div className="auth-inner">
+          <Box sx={{pt: 7.5}}>
             <Routes>
               <Route exact path="/" element={<Login />} />
               <Route path="/sign-in" element={<Login />} />
@@ -44,9 +48,10 @@ function App() {
               <Route exact path="/missions" element={<Missions/>}/>
               <Route exact path="/1" element={<Route1/>}/>
             </Routes>
+            </Box>
           </div>
         </div>
-      </div>
+      </div> 
     </Router>
   )
 }

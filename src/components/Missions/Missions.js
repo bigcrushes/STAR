@@ -88,6 +88,7 @@ const rows = [
   createData('Short Route - South', 'Easy', 49.0),
   createData('Short Route - West', 'Medium', 25.1),
   createData('Long Route - East/West', 'Hard', 10.0),
+  createData('Long Route - North/South', 'Hard', 9.5),
 ].sort((a, b) => (a.completion > b.completion ? -1 : 1));
 
 export default function CustomPaginationActionsTable() {
