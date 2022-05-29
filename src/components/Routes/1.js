@@ -5,7 +5,7 @@ import * as React from 'react';
 import GeneralAccordion from './GeneralAccordion'
 import './routes.css'
 
-const Missions = () => {
+const Route1 = () => {
   let navigate = useNavigate();
   const routeChange = () =>{ 
     let path = '/missions'; 
@@ -47,4 +47,4 @@ const Missions = () => {
   );
 }
 
-export default Missions;
+export default Route1;

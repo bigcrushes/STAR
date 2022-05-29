@@ -61,6 +61,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import { Link as RouterLink } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 // function Copyright(props) {
 //   return (
@@ -78,6 +79,7 @@ import { Link as RouterLink } from "react-router-dom";
 const theme = createTheme();
 
 export default function SignIn() {
+  const { signInWithGoogle } = useAuth();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -140,6 +142,9 @@ export default function SignIn() {
               Sign In
             </Button>
             </RouterLink>
+            <Button variant="contained" color="primary" onClick={signInWithGoogle} fullWidth sx={{ mt: 1, mb: 2 }}>
+              Sign in with Google
+            </Button>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2" component={RouterLink} className="nav-link" to={'/'}>

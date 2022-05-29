@@ -8,16 +8,19 @@ import Profile from './components/Profile/Profile';
 import Missions from './components/Missions/Missions';
 import Route1 from './components/Routes/1';
 import Box from '@mui/material/Box';
+import Home from './components/home';
+import { useAuth } from "./hooks/useAuth";
 
 
 
 function App() {
+  
   return (
     <Router>
       <div className="App">
         <nav className="navbar navbar-expand-lg navbar-light fixed-top">
           <div className="container">
-            <Link className="navbar-brand" to={'/sign-in'}>
+            <Link className="navbar-brand" to={'/'}>
               S.T.A.R
             </Link>
             <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
@@ -40,8 +43,9 @@ function App() {
         <div className="auth-wrapper">
           <div className="auth-inner">
           <Box sx={{pt: 7.5}}>
+          
             <Routes>
-              <Route exact path="/" element={<Login />} />
+              <Route exact path="/" element={<Home />} />
               <Route path="/sign-in" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route exact path="/profile" element={<Profile/>}/>
