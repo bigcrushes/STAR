@@ -46,6 +46,7 @@
 // }
 
 import * as React from 'react';
+import useState from 'react'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -80,12 +81,17 @@ const theme = createTheme();
 
 export default function SignIn() {
   const { signInWithGoogle } = useAuth();
+  const { signin } = useAuth()
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
       password: data.get('password'),
+    });
+    signin(data.get('email'), data.get('password'))
+    .catch((error) => {
+      alert("Could not verify account!");
     });
   };
 
@@ -132,7 +138,7 @@ export default function SignIn() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <RouterLink to='/missions'>
+            
             <Button
               type="submit"
               fullWidth
@@ -141,7 +147,7 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            </RouterLink>
+            
             <Button variant="contained" color="primary" onClick={signInWithGoogle} fullWidth sx={{ mt: 1, mb: 2 }}>
               Sign in with Google
             </Button>

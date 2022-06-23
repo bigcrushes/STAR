@@ -50,8 +50,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -61,6 +59,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import { Link as RouterLink } from "react-router-dom";
 import Link from '@mui/material/Link';
+import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 // function Copyright(props) {
 //   return (
@@ -78,13 +78,15 @@ import Link from '@mui/material/Link';
 const theme = createTheme();
 
 export default function SignUp() {
+  const { signup } = useAuth();
+  let navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    signup(data.get('email'), data.get('password'));
+    
+    let path = '/';
+    navigate(path);
   };
 
   return (
@@ -97,6 +99,7 @@ export default function SignUp() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            wrap: 'nowrap'
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: grey[500] }}>
@@ -166,7 +169,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2" component={RouterLink} className="nav-link" to={'/sign-in'}>
+                <Link href="#" variant="body2" component={RouterLink} className="nav-link" to={'/'}>
                   Already have an account? Sign in
                 </Link>
               </Grid>
