@@ -2,8 +2,8 @@ import {useState, React} from 'react'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link, withRouter } from 'react-router-dom'
-import Login from './components/login.component'
-import SignUp from './components/signup.component'
+import Login from './components/Login/login.component'
+import SignUp from './components/Login/signup.component'
 import Profile from './components/Profile/Profile';
 import Missions from './components/Missions/Missions';
 import Route1 from './components/Routes/1';

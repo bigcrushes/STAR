@@ -1,5 +1,5 @@
 import { useAuth } from "../hooks/useAuth";
-import Login from './login.component'
+import Login from './Login/login.component'
 import Missions from './Missions/Missions';
 
 
