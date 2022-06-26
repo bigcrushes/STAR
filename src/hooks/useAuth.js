@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, 
-  createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { firebaseConfig } from "../config/firebaseConfig.js";
+import { getFirestore } from "firebase/firestore";
 
 // Code edited from https://usehooks.com/useAuth/ and
 // https://firebase.google.com/docs/auth/web/start#add-initialize-sdk
@@ -17,6 +18,8 @@ const firebaseAuth = getAuth(app);
 const googleAuthProvider = new GoogleAuthProvider();
 
 const authContext = createContext();
+
+export const db = getFirestore(app);
 
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
@@ -45,10 +48,13 @@ function useProvideAuth() {
       });
   };
 
-  const signup = (email, password) => {
+  const signup = (name, email, password) => {
     return createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((response) => {
         const user = response.user;
+        updateProfile(user, {
+          displayName: name
+        })
         return user;
       });
   };

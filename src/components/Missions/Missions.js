@@ -78,17 +78,17 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(name, difficulty, completion) {
-  return { name, difficulty, completion };
+function createData(name, difficulty, completion, pageid) {
+  return { name, difficulty, completion , pageid};
 }
 
 const rows = [
-  createData('Short Route - East', 'Easy', 65.7),
-  createData('Short Route - North', 'Easy', 50.9),
-  createData('Short Route - South', 'Easy', 49.0),
-  createData('Short Route - West', 'Medium', 25.1),
-  createData('Long Route - East/West', 'Hard', 10.0),
-  createData('Long Route - North/South', 'Hard', 9.5),
+  createData('Short Route - East', 'Easy', 65.7, "1"),
+  createData('Short Route - North', 'Easy', 50.9, "2"),
+  createData('Short Route - South', 'Easy', 49.0, "3"),
+  createData('Short Route - West', 'Medium', 25.1, "4"),
+  createData('Long Route - East/West', 'Hard', 10.0, "5"),
+  createData('Long Route - North/South', 'Hard', 9.5, "6"),
 ].sort((a, b) => (a.completion > b.completion ? -1 : 1));
 
 export default function CustomPaginationActionsTable() {
@@ -119,7 +119,7 @@ export default function CustomPaginationActionsTable() {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => (
-            <TableRow key={row.name} component={Link} to={'/1'} style={{ textDecoration: 'none' }}>
+            <TableRow key={row.name} component={Link} to={`/${row.pageid}`} style={{ textDecoration: 'none' }}>
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>

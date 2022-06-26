@@ -7,6 +7,11 @@ import SignUp from './components/Login/signup.component'
 import Profile from './components/Profile/Profile';
 import Missions from './components/Missions/Missions';
 import Route1 from './components/Routes/1';
+import Route2 from './components/Routes/2';
+import Route3 from './components/Routes/3';
+import Route4 from './components/Routes/4';
+import Route5 from './components/Routes/5';
+import Route6 from './components/Routes/6';
 import Box from '@mui/material/Box';
 import MenuItem from "@material-ui/core/MenuItem";
 import Home from './components/home';
@@ -46,6 +51,11 @@ function App() {
                   <Route exact path="/profile" element={<Profile/>} />
                   <Route exact path="/missions" element={<Missions/>}/>
                   <Route exact path="/1" element={<Route1/>}/>
+                  <Route exact path="/2" element={<Route2/>}/>
+                  <Route exact path="/3" element={<Route3/>}/>
+                  <Route exact path="/4" element={<Route4/>}/>
+                  <Route exact path="/5" element={<Route5/>}/>
+                  <Route exact path="/6" element={<Route6/>}/>
                 </Routes>
               }
             </Box>
