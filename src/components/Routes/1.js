@@ -11,6 +11,7 @@ const Route1 = () => {
     let path = '/missions'; 
     navigate(path);
   }
+
   return(
     <div>
       <h1>Short Route - East</h1>

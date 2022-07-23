@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
+import { TableHead } from '@mui/material';
 import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
@@ -15,7 +16,8 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { Checkbox } from "@material-ui/core";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -83,12 +85,12 @@ function createData(name, difficulty, completion, pageid) {
 }
 
 const rows = [
-  createData('Short Route - East', 'Easy', 65.7, "1"),
-  createData('Short Route - North', 'Easy', 50.9, "2"),
-  createData('Short Route - South', 'Easy', 49.0, "3"),
-  createData('Short Route - West', 'Medium', 25.1, "4"),
-  createData('Long Route - East/West', 'Hard', 10.0, "5"),
-  createData('Long Route - North/South', 'Hard', 9.5, "6"),
+  createData('Short Route - East', 'Easy', 65, "1"),
+  createData('Short Route - North', 'Easy', 50, "2"),
+  createData('Short Route - South', 'Easy', 49, "3"),
+  createData('Short Route - West', 'Medium', 25, "4"),
+  createData('Long Route - East/West', 'Hard', 10, "5"),
+  createData('Long Route - North/South', 'Hard', 9, "6"),
 ].sort((a, b) => (a.completion > b.completion ? -1 : 1));
 
 export default function CustomPaginationActionsTable() {
@@ -108,26 +110,64 @@ export default function CustomPaginationActionsTable() {
     setPage(0);
   };
 
+  /* Firebase storing stuff */
+  const [tasks, setTasksState] = useState([]);
+
+  const { user } = useAuth();
+
+  function setTasks(newTasks) {
+    setTasksState(newTasks);
+    setDoc(doc(db, "tasks", user?.uid), { tasks: newTasks });
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      const docSnapshot = await getDoc(doc(db, "tasks", user?.uid));
+      if (docSnapshot.exists()) {
+        setTasksState(docSnapshot.data().tasks);
+      } else {
+        setTasksState([{Route: "Short Route - East", isComplete: false },
+                       {Route: "Short Route - North", isComplete: false },
+                       {Route: "Short Route - South", isComplete: false },
+                       {Route: "Short Route - West", isComplete: false },
+                       {Route: "Long Route - East/West", isComplete: false },
+                       {Route: "Long Route - North/South", isComplete: false }]);
+      }
+    }
+    fetchData();
+  }, [user.uid]);
+
+  /* Firebase storing stuff */
+
   return (
     <div>
     <div><h1>Missions</h1></div>  
     
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+        <TableHead>
+            <TableCell>Route</TableCell>
+            <TableCell align="right">Difficulty</TableCell>
+            <TableCell align="right">No. of Completions</TableCell>
+            <TableCell align="right">Completed</TableCell>
+        </TableHead>
         <TableBody>
           {(rowsPerPage > 0
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => (
-            <TableRow key={row.name} component={Link} to={`/${row.pageid}`} style={{ textDecoration: 'none' }}>
+            <TableRow key={row.name} style={{ textDecoration: 'none' }}>
               <TableCell component="th" scope="row">
-                {row.name}
+                <Link to={`/${row.pageid}`}>{row.name}</Link>
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
                 {row.difficulty}
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
                 {row.completion}
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="right">
+                <Checkbox/>
               </TableCell>
             </TableRow>
           ))}
