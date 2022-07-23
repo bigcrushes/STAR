@@ -110,34 +110,7 @@ export default function CustomPaginationActionsTable() {
     setPage(0);
   };
 
-  /* Firebase storing stuff */
-  const [tasks, setTasksState] = useState([]);
-
-  const { user } = useAuth();
-
-  function setTasks(newTasks) {
-    setTasksState(newTasks);
-    setDoc(doc(db, "tasks", user?.uid), { tasks: newTasks });
-  }
-
-  useEffect(() => {
-    async function fetchData() {
-      const docSnapshot = await getDoc(doc(db, "tasks", user?.uid));
-      if (docSnapshot.exists()) {
-        setTasksState(docSnapshot.data().tasks);
-      } else {
-        setTasksState([{Route: "Short Route - East", isComplete: false },
-                       {Route: "Short Route - North", isComplete: false },
-                       {Route: "Short Route - South", isComplete: false },
-                       {Route: "Short Route - West", isComplete: false },
-                       {Route: "Long Route - East/West", isComplete: false },
-                       {Route: "Long Route - North/South", isComplete: false }]);
-      }
-    }
-    fetchData();
-  }, [user.uid]);
-
-  /* Firebase storing stuff */
+  
 
   return (
     <div>
