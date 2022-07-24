@@ -18,6 +18,10 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { Link } from 'react-router-dom';
 import { Checkbox } from "@material-ui/core";
+import { useState, useEffect } from "react";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { db, useAuth } from "../../hooks/useAuth";
+
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -110,8 +114,55 @@ export default function CustomPaginationActionsTable() {
     setPage(0);
   };
 
-  
+  /* Firebase storing stuff */
+  const [tasks, setTasksState] = useState([{description: "Short Route - East", isComplete: false },
+  {description: "Short Route - North", isComplete: false },
+  {description: "Short Route - South", isComplete: false },
+  {description: "Short Route - West", isComplete: false },
+  {description: "Long Route - East/West", isComplete: false },
+  {description: "Long Route - North/South", isComplete: false }]);
 
+  const { user } = useAuth();
+
+  function setTasks(newTasks) {
+    setTasksState(newTasks);
+    setDoc(doc(db, "tasks", user?.uid), { tasks: newTasks });
+  }
+
+  function handleTaskCompletionToggled(toToggleTask, toToggleTaskIndex) {
+    const newTasks = [
+      // Once again, this is the spread operator
+      ...tasks.slice(0, toToggleTaskIndex),
+      {
+        description: toToggleTask.description,
+        isComplete: !toToggleTask.isComplete,
+        timeCompleted: Date().toLocaleString()
+      },
+      ...tasks.slice(toToggleTaskIndex + 1)
+    ];
+
+    setTasks(newTasks);
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      const docSnapshot = await getDoc(doc(db, "tasks", user?.uid));
+      if (docSnapshot.exists()) {
+        setTasksState(docSnapshot.data().tasks);
+      } else {
+        setTasksState([{description: "Short Route - East", isComplete: false, timeCompleted: false },
+                       {description: "Short Route - North", isComplete: false, timeCompleted: false },
+                       {description: "Short Route - South", isComplete: false, timeCompleted: false },
+                       {description: "Short Route - West", isComplete: false, timeCompleted: false },
+                       {description: "Long Route - East/West", isComplete: false, timeCompleted: false },
+                       {description: "Long Route - North/South", isComplete: false, timeCompleted: false }]);
+      }
+    }
+    fetchData();
+  }, [user.uid]);
+
+  /* Firebase storing stuff */
+  console.log(tasks);
   return (
     <div>
     <div><h1>Missions</h1></div>  
@@ -140,7 +191,9 @@ export default function CustomPaginationActionsTable() {
                 {row.completion}
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
-                <Checkbox/>
+                <Checkbox 
+                  checked={tasks[Number(row.pageid) - 1].isComplete}
+                  onChange={() => handleTaskCompletionToggled(tasks[Number(row.pageid) - 1], Number(row.pageid) - 1)}/>
               </TableCell>
             </TableRow>
           ))}

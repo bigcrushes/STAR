@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import { useAuth }  from '../../hooks/useAuth';
+import { doc, getDoc } from "firebase/firestore";
+import { db, useAuth } from "../../hooks/useAuth";
 import { updateProfile } from 'firebase/auth';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -28,6 +29,34 @@ const Profile = () => {
       setName(user.displayName);
     }
   }, [user]);
+
+  /* Firebase storing stuff */
+  const [tasks, setTasksState] = useState([{description: "Short Route - East", isComplete: false },
+  {description: "Short Route - North", isComplete: false },
+  {description: "Short Route - South", isComplete: false },
+  {description: "Short Route - West", isComplete: false },
+  {description: "Long Route - East/West", isComplete: false },
+  {description: "Long Route - North/South", isComplete: false }]);
+
+
+  useEffect(() => {
+    async function fetchData() {
+      const docSnapshot = await getDoc(doc(db, "tasks", user?.uid));
+      if (docSnapshot.exists()) {
+        setTasksState(docSnapshot.data().tasks);
+      } else {
+        setTasksState([{description: "Short Route - East", isComplete: false },
+                       {description: "Short Route - North", isComplete: false },
+                       {description: "Short Route - South", isComplete: false },
+                       {description: "Short Route - West", isComplete: false },
+                       {description: "Long Route - East/West", isComplete: false },
+                       {description: "Long Route - North/South", isComplete: false }]);
+      }
+    }
+    fetchData();
+  }, [user.uid]);
+
+  /* Firebase storing stuff */
   return(
     <div>
       <Box sx={{ pt: 10, pb: 2.5, alignItems:'center', display:'flex', justifyContent:"center"}}>
@@ -54,24 +83,17 @@ const Profile = () => {
       <h7>Member since: {user?.metadata.creationTime}</h7>
       <Box sx={{ flexGrow: 1, pt: 5}}>
       <Grid container spacing={3}>
-        <Grid item xs>
+      {tasks.map((task, index) => (
+        ( task.isComplete &&
+          <Grid item xs>
           <Item>
-            <h2>Short Route - East</h2>
-            <h7>Completed 01 April 2022</h7>
+            <h2>{task.description}</h2>
+            <h7>Completed: <br/>{task.timeCompleted}</h7>
           </Item>
         </Grid>
-        <Grid item xs>
-          <Item>
-            <h2>Short Route - North</h2>
-            <h7>Completed 06 May 2022</h7>
-          </Item>
-        </Grid>
-        <Grid item xs>
-          <Item>
-            <h2>Short Route - South</h2>
-            <h7>Completed 15 May 2022</h7>
-          </Item>
-        </Grid>
+        )
+        ))}
+        
       </Grid>
     </Box>
     </div>
