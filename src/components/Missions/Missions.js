@@ -115,12 +115,12 @@ export default function CustomPaginationActionsTable() {
   };
 
   /* Firebase storing stuff */
-  const [tasks, setTasksState] = useState([{description: "Short Route - East", isComplete: false },
-  {description: "Short Route - North", isComplete: false },
-  {description: "Short Route - South", isComplete: false },
-  {description: "Short Route - West", isComplete: false },
-  {description: "Long Route - East/West", isComplete: false },
-  {description: "Long Route - North/South", isComplete: false }]);
+  const [tasks, setTasksState] = useState([{description: "Short Route - East", isComplete: false, timeCompleted: false },
+  {description: "Short Route - North", isComplete: false, timeCompleted: false },
+  {description: "Short Route - South", isComplete: false, timeCompleted: false },
+  {description: "Short Route - West", isComplete: false, timeCompleted: false },
+  {description: "Long Route - East/West", isComplete: false, timeCompleted: false },
+  {description: "Long Route - North/South", isComplete: false, timeCompleted: false }]);
 
   const { user } = useAuth();
 
@@ -140,7 +140,12 @@ export default function CustomPaginationActionsTable() {
       },
       ...tasks.slice(toToggleTaskIndex + 1)
     ];
-
+    if(newTasks[toToggleTaskIndex].isComplete){
+      completions[toToggleTaskIndex] += 1;
+    } else {
+      completions[toToggleTaskIndex] -= 1;
+    }
+    setCompletion(completions);
     setTasks(newTasks);
   }
 
@@ -162,7 +167,31 @@ export default function CustomPaginationActionsTable() {
   }, [user.uid]);
 
   /* Firebase storing stuff */
-  console.log(tasks);
+
+  /* Firebase storing number of completions*/
+  const [completions, setCompletions] = useState([0,0,0,0,0,0]);
+
+  function setCompletion(newCompletion) {
+    setCompletions(newCompletion);
+    // db, collection, document
+    setDoc(doc(db, "CompletionCollection", 'CompletionDocument'), { completions: newCompletion });
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      const docSnapshot2 = await getDoc(doc(db, "CompletionCollection", 'CompletionDocument'));
+      if (docSnapshot2.exists()) {
+        setCompletions(docSnapshot2.data().completions);
+      } else {
+        setCompletions([0,0,0,0,0,0]);
+      }
+    }
+    fetchData();
+  }, [user.uid]);
+
+
+
+
   return (
     <div>
     <div><h1>Missions</h1></div>  
@@ -188,7 +217,7 @@ export default function CustomPaginationActionsTable() {
                 {row.difficulty}
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
-                {row.completion}
+                {completions[Number(row.pageid) - 1]}
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
                 <Checkbox 
