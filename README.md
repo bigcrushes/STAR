@@ -46,8 +46,6 @@ Users are also able to sign up for an account with their email and password.
 ### Missions
 The missions page will act as the home page once the user is signed in. There are instructions for users on how to use our web app at the top of our missions page. This page contains the variety of routes that we have created for users to explore. Beside each route also contains the difficulty level and the number of users that have completed the route. Users area able to mark a routes as completed by ticking the checkbox that is next to the number of users that have completed the route. 
 
-Missions page
-
 ### Appbar
 Our appbar allows user to navigate to their profile or logout.
 
