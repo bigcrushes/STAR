@@ -1,5 +1,4 @@
 # STAR
-README
 
 ## Link to demo:
 https://orbital-b3d35.web.app/
